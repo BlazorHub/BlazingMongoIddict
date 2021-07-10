@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace BlazingMongoIddict.Shared
+namespace BlazingMongoIddict.Client.Models
 {
     public class WeatherForecast
     {

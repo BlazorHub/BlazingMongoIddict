@@ -11,8 +11,4 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0-preview.5.21301.5" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Shared\BlazingMongoIddict.Shared.csproj" />
-  </ItemGroup>
-
 </Project>

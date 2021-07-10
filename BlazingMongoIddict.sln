@@ -9,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazingMongoIddict.Shared", "src\Shared\BlazingMongoIddict.Shared.csproj", "{5C2A0807-D4ED-4B31-BADB-A815E28B605D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazingMongoIddict.Client", "src\Client\BlazingMongoIddict.Client.csproj", "{9F918272-F43A-4BBD-9E46-A3E112E72D22}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazingMongoIddict.Server", "src\Server\BlazingMongoIddict.Server.csproj", "{7902734D-FACA-46B0-AD65-F6EC96FB9069}"
@@ -21,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5C2A0807-D4ED-4B31-BADB-A815E28B605D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C2A0807-D4ED-4B31-BADB-A815E28B605D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C2A0807-D4ED-4B31-BADB-A815E28B605D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C2A0807-D4ED-4B31-BADB-A815E28B605D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9F918272-F43A-4BBD-9E46-A3E112E72D22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9F918272-F43A-4BBD-9E46-A3E112E72D22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F918272-F43A-4BBD-9E46-A3E112E72D22}.Release|Any CPU.ActiveCfg = Release|Any CPU
