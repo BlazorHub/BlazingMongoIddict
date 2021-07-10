@@ -1,11 +1,6 @@
 ﻿using System.Threading.Tasks;
-using BlazingMongoIddict.Server.Data;
-using BlazingMongoIddict.Server.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -19,20 +14,7 @@ namespace BlazingMongoIddict.Server
 					.ConfigureServices((context, services) =>
 					{
 						services
-							.AddDbContext<ApplicationDbContext>(options =>
-								options.UseSqlite(context.Configuration.GetConnectionString("DefaultConnection")))
-							.AddDatabaseDeveloperPageExceptionFilter()
-							.AddDefaultIdentity<ApplicationUser>(options =>
-								options.SignIn.RequireConfirmedAccount = true)
-							.AddEntityFrameworkStores<ApplicationDbContext>();
-
-						services
-							.AddIdentityServer()
-							.AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
-
-						services
-							.AddAuthentication()
-							.AddIdentityServerJwt();
+							.AddAuthentication();
 
 						services.AddControllersWithViews();
 						services.AddRazorPages();
@@ -43,7 +25,6 @@ namespace BlazingMongoIddict.Server
 						{
 							app
 								.UseDeveloperExceptionPage()
-								.UseMigrationsEndPoint()
 								.UseWebAssemblyDebugging();
 						}
 						else
@@ -59,7 +40,6 @@ namespace BlazingMongoIddict.Server
 							.UseBlazorFrameworkFiles()
 							.UseStaticFiles()
 							.UseRouting()
-							.UseIdentityServer()
 							.UseAuthentication()
 							.UseAuthorization()
 							.UseEndpoints(endpoints =>

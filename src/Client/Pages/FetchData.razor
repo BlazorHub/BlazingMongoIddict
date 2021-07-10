@@ -1,8 +1,5 @@
 ﻿@page "/fetchdata"
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using BlazingMongoIddict.Client.Models
-@attribute [Authorize]
 @inject HttpClient _http
 
 <h1>Weather forecast</h1>
@@ -43,14 +40,6 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		try
-		{
-			_forecasts = await _http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
-		}
-		catch (AccessTokenNotAvailableException exception)
-		{
-			exception.Redirect();
-		}
+		_forecasts = await _http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
 	}
-
 }
