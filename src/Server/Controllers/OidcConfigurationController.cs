@@ -1,26 +1,19 @@
 ﻿using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace BlazingMongoIddict.Server.Controllers
 {
-    public class OidcConfigurationController : Controller
-    {
-        private readonly ILogger<OidcConfigurationController> _logger;
+	public class OidcConfigurationController : Controller
+	{
+		private readonly IClientRequestParametersProvider _clientRequestParametersProvider;
 
-        public OidcConfigurationController(IClientRequestParametersProvider clientRequestParametersProvider, ILogger<OidcConfigurationController> logger)
-        {
-            ClientRequestParametersProvider = clientRequestParametersProvider;
-            _logger = logger;
-        }
+		public OidcConfigurationController(IClientRequestParametersProvider clientRequestParametersProvider)
+		{
+			_clientRequestParametersProvider = clientRequestParametersProvider;
+		}
 
-        public IClientRequestParametersProvider ClientRequestParametersProvider { get; }
-
-        [HttpGet("_configuration/{clientId}")]
-        public IActionResult GetClientRequestParameters([FromRoute]string clientId)
-        {
-            var parameters = ClientRequestParametersProvider.GetClientParameters(HttpContext, clientId);
-            return Ok(parameters);
-        }
-    }
+		[HttpGet("_configuration/{clientId}")]
+		public IActionResult GetClientRequestParameters([FromRoute] string clientId) =>
+			Ok(_clientRequestParametersProvider.GetClientParameters(HttpContext, clientId));
+	}
 }
