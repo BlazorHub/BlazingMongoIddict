@@ -22,7 +22,7 @@ else
 			</tr>
 		</thead>
 		<tbody>
-			@foreach (var (dateTime, temperature, summary) in State.Forecasts)
+			@foreach (var (dateTime, temperature, summary) in State.CurrentForecasts)
 			{
 				<tr>
 					<td>@dateTime.ToShortDateString()</td>
@@ -35,10 +35,18 @@ else
 	</table>
 }
 
+<button class="btn btn-primary" @onclick="() => FetchDataClick(State.Index - 5)">Previous</button>
+<button class="btn btn-primary" @onclick="() => FetchDataClick(State.Index + 5)">Next</button>
+
 @code {
+
+	private void FetchDataClick(int number) =>
+		Dispatch(State.Forecasts.ContainsKey(number) ? new LoadPageAction(number) : new FetchDataAction(number));
+	
 	protected override void OnInitialized()
 	{
 		base.OnInitialized();
-		Dispatch(new FetchDataAction());
+		if (!State.Forecasts.ContainsKey(State.Index))
+			Dispatch(new FetchDataAction(State.Index));
 	}
 }

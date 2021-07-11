@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -9,29 +10,40 @@ namespace BlazingMongoIddict.Client.Store.Weather
 {
 	public class WeatherState
 	{
-		public bool IsLoading { get; }
-		public IEnumerable<WeatherForecast> Forecasts { get; }
+		public bool IsLoading => Forecasts is null || !Forecasts.ContainsKey(Index);
+		public int Index { get; }
 
-		public WeatherState(bool isLoading = false, IEnumerable<WeatherForecast> forecasts = null)
+		public IEnumerable<WeatherForecast> CurrentForecasts => IsLoading ? default : Forecasts[Index];
+
+		public IReadOnlyDictionary<int, IEnumerable<WeatherForecast>> Forecasts { get; } 
+
+		public WeatherState(int index = 0, IReadOnlyDictionary<int, IEnumerable<WeatherForecast>> forecasts = null)
 		{
-			IsLoading = isLoading;
-			Forecasts = forecasts;
+			Index = index;
+			Forecasts = forecasts ?? new Dictionary<int, IEnumerable<WeatherForecast>>();
 		}
 	}
 
-	public record FetchDataAction;
+	public record LoadPageAction(int Index = 0);
 
-	public record FetchDataResultAction(IEnumerable<WeatherForecast> Forecasts);
+	public record FetchDataAction : LoadPageAction
+	{
+		public FetchDataAction(int index) : base(index) { }
+	}
+
+	public record FetchDataResultAction(IEnumerable<WeatherForecast> Forecasts, int Index = 0);
 
 	public static class Reducers
 	{
 		[ReducerMethod]
-		public static WeatherState ReduceFetchDataAction(WeatherState state, FetchDataAction action) =>
-			new(true);
-
+		public static WeatherState ReduceLoadPageAction(WeatherState state, LoadPageAction action) =>
+			new(action.Index, state.Forecasts);
+		
 		[ReducerMethod]
 		public static WeatherState ReduceFetchDataResultAction(WeatherState state, FetchDataResultAction action) =>
-			new(forecasts: action.Forecasts);
+			new(action.Index, new Dictionary<int, IEnumerable<WeatherForecast>>(
+				state.Forecasts.Append(
+					new KeyValuePair<int, IEnumerable<WeatherForecast>>(action.Index, action.Forecasts))));
 	}
 
 	public class Feature : Feature<WeatherState>
@@ -51,9 +63,7 @@ namespace BlazingMongoIddict.Client.Store.Weather
 		}
 
 		[EffectMethod]
-		public async Task HandleFetchDataAction(FetchDataAction action, IDispatcher dispatcher)
-		{
-			dispatcher.Dispatch(new FetchDataResultAction(await _http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast")));
-		}
+		public async Task HandleFetchDataAction(FetchDataAction action, IDispatcher dispatcher) =>
+			dispatcher.Dispatch(new FetchDataResultAction(await _http.GetFromJsonAsync<WeatherForecast[]>($"WeatherForecast/{action.Index}"), action.Index));
 	}
 }
