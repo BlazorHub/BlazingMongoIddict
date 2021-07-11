@@ -2,14 +2,11 @@
 
 namespace BlazingMongoIddict.Client.Models
 {
-	public class WeatherForecast
+
+	public record Temperature(int Celsius)
 	{
-		public DateTime Date { get; set; }
-
-		public int TemperatureC { get; set; }
-
-		public string Summary { get; set; }
-
-		public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+		public int Fahrenheit => 32 + (int) (Celsius / 0.5556m);
 	}
+
+	public record WeatherForecast(DateTime Date, Temperature Temperature, string Summary);
 }

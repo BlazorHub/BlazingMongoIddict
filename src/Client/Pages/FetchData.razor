@@ -22,13 +22,13 @@ else
 			</tr>
 		</thead>
 		<tbody>
-			@foreach (var forecast in _forecasts)
+			@foreach (var (dateTime, temperature, summary) in _forecasts)
 			{
 				<tr>
-					<td>@forecast.Date.ToShortDateString()</td>
-					<td>@forecast.TemperatureC</td>
-					<td>@forecast.TemperatureF</td>
-					<td>@forecast.Summary</td>
+					<td>@dateTime.ToShortDateString()</td>
+					<td>@temperature.Celsius</td>
+					<td>@temperature.Fahrenheit</td>
+					<td>@summary</td>
 				</tr>
 			}
 		</tbody>
