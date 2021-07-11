@@ -8,19 +8,27 @@ using Fluxor;
 
 namespace BlazingMongoIddict.Client.Store.Weather
 {
-	public class WeatherState
+	public record WeatherState
 	{
-		public bool IsLoading => Forecasts is null || !Forecasts.ContainsKey(Index);
-		public int Index { get; }
+		private readonly IReadOnlyDictionary<int, IEnumerable<WeatherForecast>> _forecasts;
 
-		public IEnumerable<WeatherForecast> CurrentForecasts => IsLoading ? default : Forecasts[Index];
+		public bool IsLoading => !Contains(Index);
+		
+		public int Index { get; init; }
 
-		public IReadOnlyDictionary<int, IEnumerable<WeatherForecast>> Forecasts { get; } 
+		public bool Contains(int index) => _forecasts.ContainsKey(index);
+
+		public IEnumerable<WeatherForecast> Forecasts => IsLoading ? default : _forecasts[Index];
+
+		internal IReadOnlyDictionary<int, IEnumerable<WeatherForecast>> AddForecastResults(int index, IEnumerable<WeatherForecast> forecasts) =>
+			new Dictionary<int, IEnumerable<WeatherForecast>>(
+				_forecasts.Append(
+					new KeyValuePair<int, IEnumerable<WeatherForecast>>(index, forecasts)));
 
 		public WeatherState(int index = 0, IReadOnlyDictionary<int, IEnumerable<WeatherForecast>> forecasts = null)
 		{
 			Index = index;
-			Forecasts = forecasts ?? new Dictionary<int, IEnumerable<WeatherForecast>>();
+			_forecasts = forecasts ?? new Dictionary<int, IEnumerable<WeatherForecast>>();
 		}
 	}
 
@@ -37,13 +45,11 @@ namespace BlazingMongoIddict.Client.Store.Weather
 	{
 		[ReducerMethod]
 		public static WeatherState ReduceLoadPageAction(WeatherState state, LoadPageAction action) =>
-			new(action.Index, state.Forecasts);
-		
+			state with { Index = action.Index };
+
 		[ReducerMethod]
 		public static WeatherState ReduceFetchDataResultAction(WeatherState state, FetchDataResultAction action) =>
-			new(action.Index, new Dictionary<int, IEnumerable<WeatherForecast>>(
-				state.Forecasts.Append(
-					new KeyValuePair<int, IEnumerable<WeatherForecast>>(action.Index, action.Forecasts))));
+			new(state.Index, state.AddForecastResults(action.Index, action.Forecasts));
 	}
 
 	internal class Feature : Feature<WeatherState>

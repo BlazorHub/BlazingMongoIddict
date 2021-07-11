@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BlazingMongoIddict.Client.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,8 +18,10 @@ namespace BlazingMongoIddict.Server.Controllers
 
 		[HttpGet]
 		[HttpGet("{id:int}")]
-		public ActionResult<IEnumerable<WeatherForecast>> Get(int id = 0)
+		public async Task<ActionResult<IEnumerable<WeatherForecast>>> Get(int id = 0)
 		{
+			// Delay for 1 second to simulate loading
+			await Task.Delay(1000);
 			return Ok(Enumerable
 				.Range(id, 5)
 				.Select(i => new WeatherForecast(DateTime.Now.AddDays(i), new Temperature(Random.Shared.Next(-20, 55)),
