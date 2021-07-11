@@ -24,16 +24,16 @@ namespace BlazingMongoIddict.Client.Store.Weather
 		}
 	}
 
-	public record LoadPageAction(int Index = 0);
+	internal record LoadPageAction(int Index = 0);
 
-	public record FetchDataAction : LoadPageAction
+	internal record FetchDataAction : LoadPageAction
 	{
 		public FetchDataAction(int index) : base(index) { }
 	}
 
-	public record FetchDataResultAction(IEnumerable<WeatherForecast> Forecasts, int Index = 0);
+	internal record FetchDataResultAction(IEnumerable<WeatherForecast> Forecasts, int Index = 0);
 
-	public static class Reducers
+	internal static class Reducers
 	{
 		[ReducerMethod]
 		public static WeatherState ReduceLoadPageAction(WeatherState state, LoadPageAction action) =>
@@ -46,14 +46,14 @@ namespace BlazingMongoIddict.Client.Store.Weather
 					new KeyValuePair<int, IEnumerable<WeatherForecast>>(action.Index, action.Forecasts))));
 	}
 
-	public class Feature : Feature<WeatherState>
+	internal class Feature : Feature<WeatherState>
 	{
 		public override string GetName() => "Weather";
 		protected override WeatherState GetInitialState() =>
 			new();
 	}
 
-	public class Effects
+	internal class Effects
 	{
 		private readonly HttpClient _http;
 

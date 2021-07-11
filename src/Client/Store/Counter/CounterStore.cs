@@ -15,10 +15,10 @@ namespace BlazingMongoIddict.Client.Store.Counter
 	}
 
 	// Action(s) can be records for simplicity because equality is not used
-	public record ChangeCounterAction(int Number);
-	
+	internal record ChangeCounterAction(int Number);
+
 	// Reducer methods must be static
-	public static class Reducers
+	internal static class Reducers
 	{
 		[ReducerMethod]
 		public static CounterState ReduceChangeCounterAction(CounterState state, ChangeCounterAction action) =>
@@ -26,7 +26,7 @@ namespace BlazingMongoIddict.Client.Store.Counter
 	}
 
 	// Initial state provided by Feature
-	public class Feature : Feature<CounterState>
+	internal class Feature : Feature<CounterState>
 	{
 		public override string GetName() => "Counter";
 		protected override CounterState GetInitialState() => new();
