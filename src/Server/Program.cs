@@ -13,9 +13,7 @@ namespace BlazingMongoIddict.Server
 				.ConfigureWebHostDefaults(webBuilder => webBuilder
 					.ConfigureServices((context, services) =>
 					{
-						services
-							.AddAuthentication();
-
+						services.AddAuthentication();
 						services.AddControllersWithViews();
 						services.AddRazorPages();
 					})
