@@ -3,6 +3,7 @@
 namespace BlazingMongoIddict.Client.Store.Counter
 {
 	// State needs to be a class for reference equality
+	// Make the properties in the state class immutable (get only)
 	public class CounterState
 	{
 		public CounterState(int count = 0)

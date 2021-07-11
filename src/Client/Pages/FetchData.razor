@@ -1,12 +1,12 @@
 ﻿@page "/fetchdata"
-@using BlazingMongoIddict.Client.Models
-@inject HttpClient _http
+@using BlazingMongoIddict.Client.Store.Weather
+@inherits Components.FluxorDispatchComponent<WeatherState>
 
 <h1>Weather forecast</h1>
 
 <p>This component demonstrates fetching data from the server.</p>
 
-@if (_forecasts == null)
+@if (State.IsLoading)
 {
 	<p><em>Loading...</em></p>
 }
@@ -22,7 +22,7 @@ else
 			</tr>
 		</thead>
 		<tbody>
-			@foreach (var (dateTime, temperature, summary) in _forecasts)
+			@foreach (var (dateTime, temperature, summary) in State.Forecasts)
 			{
 				<tr>
 					<td>@dateTime.ToShortDateString()</td>
@@ -36,10 +36,9 @@ else
 }
 
 @code {
-	private WeatherForecast[] _forecasts;
-
-	protected override async Task OnInitializedAsync()
+	protected override void OnInitialized()
 	{
-		_forecasts = await _http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+		base.OnInitialized();
+		Dispatch(new FetchDataAction());
 	}
 }
