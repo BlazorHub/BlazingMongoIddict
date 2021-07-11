@@ -1,16 +1,15 @@
 ﻿@page "/counter"
+@using BlazingMongoIddict.Client.Store.Counter
+@inherits Components.FluxorDispatchComponent<CounterState>
 
 <h1>Counter</h1>
 
-<p>Current count: @_currentCount</p>
+<p>Current count: @State.Count</p>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<button class="btn btn-primary" @onclick="() => ChangeCounter(1)">Increment</button>
+<button class="btn btn-primary" @onclick="() => ChangeCounter(-1)">Decrement</button>
 
 @code {
-	private int _currentCount;
-
-	private void IncrementCount()
-	{
-		_currentCount++;
-	}
+	private void ChangeCounter(int number) =>
+		Dispatch(new ChangeCounterAction(number));
 }
