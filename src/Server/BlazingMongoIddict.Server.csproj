@@ -8,6 +8,8 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.*" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.0-*" />
+    <PackageReference Include="OpenIddict.AspNetCore" Version="3.*" />
+    <PackageReference Include="OpenIddict.MongoDb" Version="3.*" />
   </ItemGroup>
 
   <ItemGroup>

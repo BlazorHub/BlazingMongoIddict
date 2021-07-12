@@ -4,8 +4,10 @@ using BlazingMongoIddict.Server.Validators;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MongoDB.Driver;
 
 namespace BlazingMongoIddict.Server
 {
@@ -17,6 +19,28 @@ namespace BlazingMongoIddict.Server
 					.ConfigureServices((context, services) =>
 					{
 						services
+							.AddOpenIddict(builder =>
+								// Register the OpenIddict core services.
+								builder
+									.AddCore(options =>
+									{
+										var url = new MongoUrl(context.Configuration.GetConnectionString("Auth"));
+										// Configure OpenIddict to use the MongoDB stores and models.
+										options
+											.UseMongoDb()
+											.UseDatabase(new MongoClient(url).GetDatabase(url.DatabaseName));
+									})
+									.AddServer(options => options
+										.AllowClientCredentialsFlow()
+										.SetTokenEndpointUris("/connect/token")
+										.AddEphemeralEncryptionKey() // Encryption and signing of tokens
+										.AddEphemeralSigningKey()
+										.DisableAccessTokenEncryption()
+										.RegisterScopes("api") // Register scopes (permissions)
+										.UseAspNetCore() // Register the ASP.NET Core host and configure the ASP.NET Core-specific options.
+										.EnableTokenEndpointPassthrough()
+									)
+							)
 							.AddTransient<IZipCodeValidator, ZipCodeValidator>()
 							.AddAuthentication();
 						services
