@@ -1,4 +1,7 @@
 ﻿using System.Threading.Tasks;
+using BlazingMongoIddict.Client.Models;
+using BlazingMongoIddict.Server.Validators;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,8 +16,12 @@ namespace BlazingMongoIddict.Server
 				.ConfigureWebHostDefaults(webBuilder => webBuilder
 					.ConfigureServices((context, services) =>
 					{
-						services.AddAuthentication();
-						services.AddControllersWithViews();
+						services
+							.AddTransient<IZipCodeValidator, ZipCodeValidator>()
+							.AddAuthentication();
+						services
+							.AddControllersWithViews()
+							.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddressValidator>());
 						services.AddRazorPages();
 					})
 					.Configure((context, app) =>

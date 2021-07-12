@@ -1,0 +1,36 @@
+﻿@page "/address"
+@using BlazingMongoIddict.Client.Models
+@using Blazored.FluentValidation
+<h3>Address</h3>
+
+<EditForm Model="@Model" OnValidSubmit="@SubmitValidForm">
+	<FluentValidationValidator />
+	<ValidationSummary />
+	<p>
+		<label>Line 1: </label>
+		<InputText @bind-Value="@Model.Line1" />
+		<ValidationMessage For="@(() => Model.Line1)" />
+	</p>
+	<p>
+		<label>Line 2: </label>
+		<InputText @bind-Value="@Model.Line2" />
+		<ValidationMessage For="@(() => Model.Line2)" />
+	</p>
+	<p>
+		<label>ZIP Code: </label>
+		<InputText @bind-Value="@Model.Zip" />
+		<ValidationMessage For="@(() => Model.Zip)" />
+	</p>
+	
+	<button type="submit">Save</button>
+</EditForm>
+
+@code {
+	AddressRequest Model { get; } = new();
+
+	static void SubmitValidForm()
+	{
+		// TODO: Post to API
+		Console.WriteLine("Form Submitted Successfully!");
+	}
+}

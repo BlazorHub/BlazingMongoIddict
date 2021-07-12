@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using BlazingMongoIddict.Client.Models;
 using Fluxor;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,8 +17,9 @@ namespace BlazingMongoIddict.Client
 			builder.RootComponents.Add<App>("#app");
 
 			builder.Services
+				.AddTransient<IZipCodeValidator, ZipCodeValidator>()
 				.AddHttpClient("BlazingMongoIddict.ServerAPI",
-					client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
+					client => client.BaseAddress = new Uri($"{builder.HostEnvironment.BaseAddress}api/"));
 
 			// Supply HttpClient instances that include access tokens when making requests to the server project
 			builder.Services
